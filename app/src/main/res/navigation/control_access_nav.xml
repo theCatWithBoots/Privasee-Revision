@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/control_access_nav"
+    app:startDestination="@id/controlAccessFragment">
+
+    <fragment
+        android:id="@+id/screenTimeLimit"
+        android:name="com.example.privasee.ui.controlAccess.ControlAccessFragmentScreenTimeLimit"
+        android:label="SetupOwnerFragment"
+        tools:layout="@layout/fragment_control_access_screentimelimit" >
+        <action
+            android:id="@+id/action_screenTimeLimit_to_controlAccessFragment"
+            app:destination="@id/controlAccessFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/controlAccessFragment"
+        android:name="com.example.privasee.ui.controlAccess.ControlAccessFragment"
+        android:label="ControlAccessFragment"
+        tools:layout="@layout/fragment_control_access" >
+
+        <action
+            android:id="@+id/action_controlAccessFragment_to_appLock"
+            app:destination="@id/appLock" />
+        <action
+            android:id="@+id/action_controlAccessFragment_to_screenTimeLimit"
+            app:destination="@id/screenTimeLimit" />
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/appLock"
+        android:name="com.example.privasee.ui.controlAccess.ControlAccessFragmentScreenAppLock"
+        android:label="ControlAccessFragment"
+        tools:layout="@layout/fragment_control_access_applock" >>
+        <action
+            android:id="@+id/action_appLock_to_controlAccessFragment"
+            app:destination="@id/controlAccessFragment" />
+        <action
+            android:id="@+id/action_appLock_to_setOwner"
+            app:destination="@id/setOwner" />
+    </fragment>
+
+
+</navigation>

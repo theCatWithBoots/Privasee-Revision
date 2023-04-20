@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/applock_tosetowner"
+    app:startDestination="@id/appLock">
+
+    <fragment
+        android:id="@+id/appLock"
+        android:name="com.example.privasee.ui.controlAccess.ControlAccessFragmentScreenAppLock"
+        android:label="ControlAccessFragment"
+        tools:layout="@layout/fragment_control_access_applock" >>
+
+        <action
+            android:id="@+id/action_appLock_to_setOwner"
+            app:destination="@id/setOwner" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/setOwner"
+        android:name="com.example.privasee.ui.controlAccess.SetupOwnerFragment"
+        android:label="ControlAccessFragment"
+        tools:layout="@layout/fragment_setup_owner" >>
+
+        <action
+            android:id="@+id/action_setOwner_to_appLock"
+            app:destination="@id/appLock" />
+    </fragment>
+</navigation>

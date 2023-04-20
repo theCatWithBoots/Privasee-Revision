@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/to_setting"
+    app:startDestination="@id/monitorFragment">
+
+    <fragment
+        android:id="@+id/monitorFragment"
+        android:name="com.example.privasee.ui.monitor.MonitorFragment"
+        android:label="fragment_monitor"
+        tools:layout="@layout/fragment_monitor">
+        <action
+            android:id="@+id/action_monitorFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.example.privasee.ui.monitor.SettingsFragment"
+        android:label="SettingsFragment" >
+        <action
+            android:id="@+id/action_settingsFragment_to_monitorFragment"
+            app:destination="@id/monitorFragment" />
+    </fragment>
+
+
+</navigation>

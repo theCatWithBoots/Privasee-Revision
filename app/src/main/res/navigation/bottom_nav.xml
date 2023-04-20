@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/bottom_nav"
+    app:startDestination="@id/monitorStart">
+
+    <fragment
+        android:id="@+id/monitorStart"
+        android:name="com.example.privasee.ui.monitor.MonitorStart"
+        android:label="fragment_monitor_start"
+        tools:layout="@layout/fragment_monitor_start" />
+    <fragment
+        android:id="@+id/controlAccessStart"
+        android:name="com.example.privasee.ui.controlAccess.ControlAccessStart"
+        android:label="fragment_control_access"
+        tools:layout="@layout/fragment_control_access_start" >
+        <action
+            android:id="@+id/action_controlAccessStart_to_monitorStart"
+            app:destination="@id/monitorStart" />
+    </fragment>
+    <fragment
+        android:id="@+id/listUser"
+        android:name="com.example.privasee.ui.users.UserListNavHost"
+        android:label="fragment_list_user"
+        tools:layout="@layout/fragment_user_list_navhost" >
+        <action
+            android:id="@+id/action_listUser_to_controlAccessStart"
+            app:destination="@id/controlAccessStart" />
+    </fragment>
+
+
+</navigation>

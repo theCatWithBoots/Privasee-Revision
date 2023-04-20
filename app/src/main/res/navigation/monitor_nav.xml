@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/monitor_nav"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:startDestination="@id/monitorFragment">
+
+    <fragment
+        android:id="@+id/monitorFragment"
+        android:name="com.example.privasee.ui.monitor.MonitorFragment"
+        android:label="SetupOwnerFragment"
+        tools:layout="@layout/fragment_monitor" >
+    <action
+            android:id="@+id/action_monitorFragment_to_AccessRecords"
+            app:destination="@id/AccessRecords" />
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/AccessRecords"
+        android:name="com.example.privasee.ui.monitor.MonitoringAccessRecords"
+        android:label="SetupOwnerFragment"
+        tools:layout="@layout/fragment_monitor_access_records" >
+        <action
+            android:id="@+id/action_AccessRecords_to_monitorFragment"
+            app:destination="@id/monitorFragment" />
+        <action
+            android:id="@+id/action_AccessRecords_to_ViewImage"
+            app:destination="@id/ViewImage" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/ViewImage"
+        android:name="com.example.privasee.ui.monitor.ViewImage"
+        android:label="SetupOwnerFragment"
+        tools:layout="@layout/recycler_item_monitor_view_image" >
+        <action
+            android:id="@+id/action_ViewImage_to_AccessRecords"
+            app:destination="@id/AccessRecords" />
+        <argument
+            android:name="currentRecord"
+            app:argType="com.example.privasee.database.model.Record" />
+    </fragment>
+
+
+</navigation>

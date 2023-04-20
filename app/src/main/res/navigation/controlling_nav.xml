@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/controlling_nav"
+    app:startDestination="@id/userAppControlledFragment">
+
+    <fragment
+        android:id="@+id/userAppControlledFragment"
+        android:name="com.example.privasee.ui.users.userInfoUpdate.userAppControl.controlled.UserAppControlledFragment"
+        android:label="fragment_user_app_controlled"
+        tools:layout="@layout/fragment_user_app_controlled" >
+        <action
+            android:id="@+id/action_userAppControlledFragment_to_userAppUncontrolledFragment"
+            app:destination="@id/userAppUncontrolledFragment" />
+        <action
+            android:id="@+id/action_userAppControlledFragment_to_mainActivity3"
+            app:destination="@id/mainActivity3" />
+        <argument
+            android:name="userId"
+            app:argType="integer"
+            android:defaultValue="0" />
+    </fragment>
+    <fragment
+        android:id="@+id/userAppUncontrolledFragment"
+        android:name="com.example.privasee.ui.users.userInfoUpdate.userAppControl.uncontrolled.UserAppUncontrolledFragment"
+        android:label="fragment_user_app_uncontrolled"
+        tools:layout="@layout/fragment_user_app_uncontrolled" >
+        <action
+            android:id="@+id/action_userAppUncontrolledFragment_to_userAppControlledFragment"
+            app:destination="@id/userAppControlledFragment" />
+        <action
+            android:id="@+id/action_userAppUncontrolledFragment_to_mainActivity3"
+            app:destination="@id/mainActivity3" />
+        <argument
+            android:name="userId"
+            app:argType="integer"
+            android:defaultValue="0" />
+    </fragment>
+    <activity
+        android:id="@+id/mainActivity3"
+        android:name="com.example.privasee.MainActivity"
+        android:label="activity_main"
+        tools:layout="@layout/activity_main" />
+</navigation>

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.controlAccess.ControlAccessFragment">
+
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="358dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
+        android:fontFamily="@font/roboto_slab"
+        android:gravity="center"
+        android:text="Limit Screen Time: Allows you to set maximum amount of time for a screen time usage. \n`It does not include application blocking`"
+        android:textSize="15sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/applock"
+        android:layout_width="wrap_content"
+        android:layout_height="70dp"
+        android:layout_marginTop="40dp"
+        android:fontFamily="@font/roboto_slab"
+        android:gravity="center"
+        android:text="App Block"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="@+id/scrnTimeLimit"
+        app:layout_constraintHorizontal_bias="0.494"
+        app:layout_constraintStart_toStartOf="@+id/scrnTimeLimit"
+        app:layout_constraintTop_toBottomOf="@+id/scrnTimeLimit" />
+
+    <Button
+        android:id="@+id/scrnTimeLimit"
+        android:layout_width="wrap_content"
+        android:layout_height="70dp"
+        android:layout_marginTop="60dp"
+        android:fontFamily="@font/roboto_slab"
+        android:gravity="center"
+        android:text="Limit Screen Time"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="@+id/textView6"
+        app:layout_constraintHorizontal_bias="0.495"
+        app:layout_constraintStart_toStartOf="@+id/textView6"
+        app:layout_constraintTop_toBottomOf="@+id/textView6" />
+
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="358dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:fontFamily="@font/roboto_slab"
+        android:gravity="center"
+        android:text="App Block : Has the functionality of 'Limits Screen Time' and it turns on the 'Application Blocking' to limit user access for different apps"
+        android:textSize="15sp"
+        app:layout_constraintEnd_toEndOf="@+id/textView5"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/textView5"
+        app:layout_constraintTop_toBottomOf="@+id/textView5" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

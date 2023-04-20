@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.initialRun.SetupOwnerFragment">
+
+    <TextView
+        android:id="@+id/textView13"
+        android:layout_width="360dp"
+        android:layout_height="41dp"
+        android:layout_marginTop="4dp"
+        android:fontFamily="@font/roboto_slab"
+        android:gravity="center"
+        android:text="Enroll Face: This process takes 20 images of your face. This is for training the facial verification"
+        android:textSize="15sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.49"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView14"
+        android:layout_width="360dp"
+        android:layout_height="41dp"
+        android:layout_marginTop="16dp"
+        android:fontFamily="@font/roboto_slab"
+        android:gravity="center"
+        android:text="Admin Permission: This permission is only used for automatic screen lock"
+        android:textSize="15sp"
+        app:layout_constraintEnd_toEndOf="@+id/textView13"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/textView13"
+        app:layout_constraintTop_toBottomOf="@+id/textView13" />
+
+    <TextView
+        android:id="@+id/textView15"
+        android:layout_width="360dp"
+        android:layout_height="41dp"
+        android:layout_marginTop="12dp"
+        android:fontFamily="@font/roboto_slab"
+        android:gravity="center"
+        android:text="Accessibility Service: This is used to detect app launches."
+        android:textSize="15sp"
+        app:layout_constraintEnd_toEndOf="@+id/textView14"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/textView14"
+        app:layout_constraintTop_toBottomOf="@+id/textView14" />
+
+    <TextView
+        android:id="@+id/textView16"
+        android:layout_width="360dp"
+        android:layout_height="41dp"
+        android:layout_marginTop="24dp"
+        android:fontFamily="@font/roboto_slab"
+        android:gravity="center"
+        android:text="You can select which apps to monitor later in the 'User Settings'"
+        android:textSize="15sp"
+        app:layout_constraintEnd_toEndOf="@+id/textView15"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/textView15"
+        app:layout_constraintTop_toBottomOf="@+id/textView15" />
+
+    <Button
+        android:id="@+id/btnEnableAccessibilityService"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:text="Enable Accessibility Service"
+        app:layout_constraintEnd_toEndOf="@+id/btnAdminPermission"
+        app:layout_constraintHorizontal_bias="0.515"
+        app:layout_constraintStart_toStartOf="@+id/btnAdminPermission"
+        app:layout_constraintTop_toBottomOf="@+id/btnAdminPermission" />
+
+    <Button
+        android:id="@+id/btnOwnerRegisterFace"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Enroll Face"
+        app:layout_constraintEnd_toEndOf="@+id/etSetName"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/etSetName"
+        app:layout_constraintTop_toBottomOf="@+id/etSetName" />
+
+    <Button
+        android:id="@+id/btnSetupOwnerFinish"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:text="Finish"
+        app:layout_constraintEnd_toEndOf="@+id/btnEnableAccessibilityService"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/btnEnableAccessibilityService"
+        app:layout_constraintTop_toBottomOf="@+id/btnEnableAccessibilityService" />
+
+    <EditText
+        android:id="@+id/etSetName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:ems="10"
+        android:hint="Name"
+        android:inputType="textPersonName"
+        android:minHeight="48dp"
+        app:layout_constraintEnd_toEndOf="@+id/textView16"
+        app:layout_constraintHorizontal_bias="0.506"
+        app:layout_constraintStart_toStartOf="@+id/textView16"
+        app:layout_constraintTop_toBottomOf="@+id/textView16" />
+
+    <Button
+        android:id="@+id/btnAdminPermission"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:text="Enable Admin Permission"
+        app:layout_constraintEnd_toEndOf="@+id/btnOwnerRegisterFace"
+        app:layout_constraintHorizontal_bias="0.508"
+        app:layout_constraintStart_toStartOf="@+id/btnOwnerRegisterFace"
+        app:layout_constraintTop_toBottomOf="@+id/btnOwnerRegisterFace" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

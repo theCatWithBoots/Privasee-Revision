@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.controlAccess.ControlAccessFragmentScreenAppLock">
+
+
+    <TextView
+        android:id="@+id/textView10"
+        android:layout_width="309dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="28dp"
+        android:fontFamily="@font/roboto_slab"
+        android:gravity="center"
+        android:text="Make sure accessibility service for PrivaSee is enabled"
+        android:textSize="15sp"
+        app:layout_constraintEnd_toEndOf="@+id/spinnerUsers"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/spinnerUsers"
+        app:layout_constraintTop_toBottomOf="@+id/spinnerUsers" />
+
+    <Button
+        android:id="@+id/accessibility"
+        android:layout_width="260dp"
+        android:layout_height="54dp"
+        android:layout_marginTop="8dp"
+        android:fontFamily="@font/roboto_slab"
+        android:text="Enable Accessibility"
+        android:textSize="15sp"
+        app:layout_constraintEnd_toEndOf="@+id/textView10"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/textView10"
+        app:layout_constraintTop_toBottomOf="@+id/textView10" />
+
+    <TextView
+        android:id="@+id/remainingTime2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:fontFamily="@font/roboto_slab"
+        android:text="Timer is not set"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="@+id/timeButton2"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/timeButton2"
+        app:layout_constraintTop_toBottomOf="@+id/timeButton2" />
+
+    <Button
+        android:id="@+id/timeButton2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:width="300dp"
+        android:height="100dp"
+        android:fontFamily="@font/roboto_slab"
+        android:onClick="popTimePicker"
+        android:text="Time Limit"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="@+id/accessibility"
+        app:layout_constraintStart_toStartOf="@+id/accessibility"
+        app:layout_constraintTop_toBottomOf="@+id/accessibility" />
+
+    <Button
+        android:id="@+id/btnStartAppBlock"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:fontFamily="@font/roboto_slab"
+        android:text="Start App Block"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="@+id/remainingTime2"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/remainingTime2"
+        app:layout_constraintTop_toBottomOf="@+id/remainingTime2" />
+
+    <Button
+        android:id="@+id/btnStopAppBlock"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:fontFamily="@font/roboto_slab"
+        android:text="Stop App Block"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="@+id/btnStartAppBlock"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/btnStartAppBlock"
+        app:layout_constraintTop_toBottomOf="@+id/btnStartAppBlock" />
+
+    <Spinner
+        android:id="@+id/spinnerUsers"
+        android:layout_width="297dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="4dp"
+        android:fontFamily="@font/roboto_slab"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="@+id/textView9"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/textView9"
+        app:layout_constraintTop_toBottomOf="@+id/textView9"
+        tools:ignore="SpeakableTextPresentCheck" />
+
+    <TextView
+        android:id="@+id/textView9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:fontFamily="@font/roboto_slab"
+        android:gravity="center"
+        android:text="Select User to apply restriction"
+        android:textSize="15sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.502"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

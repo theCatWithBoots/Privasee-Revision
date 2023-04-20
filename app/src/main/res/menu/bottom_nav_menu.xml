@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:title="Monitor"
+        android:id="@+id/monitorStart"
+        android:icon="@drawable/monitor" />
+
+    <item
+        android:title="Control Access"
+        android:id="@+id/controlAccessStart"
+        android:icon="@drawable/control_access" />
+
+    <item
+        android:title="Users"
+        android:id="@+id/listUser"
+        android:icon="@drawable/users" />
+
+</menu>
