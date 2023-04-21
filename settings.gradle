@@ -14,3 +14,8 @@ dependencyResolutionManagement {
 }
 rootProject.name = "PrivaSee"
 include ':app'
+
+include ':java'
+include ':java'
+include ':java'
+include ':opencv-4.7.0'

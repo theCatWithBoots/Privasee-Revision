@@ -38,16 +38,20 @@ android {
 
         //give path to python.exe
         python{
-            buildPython "C:/Users/user/AppData/Local/Programs/Python/Python311/python.exe"
+            buildPython "C:/Users/user/AppData/Local/Programs/Python/Python310/python.exe"
         }
 
         python{
             pip{
                 install "numpy"
-                install "opencv-python"
                 install "pybase64"
                 install "pillow"
                 install "scikit-learn"
+               // install "deepface==0.0.74"
+                install "pillow"
+                install "face_recognition"
+                //install "face-recognition"
+                install "opencv-python"
             }
         }
     }
@@ -74,7 +78,6 @@ android {
 }
 
 dependencies {
-
     implementation 'androidx.core:core-ktx:1.9.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.8.0'
