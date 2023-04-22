@@ -7,10 +7,9 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
-import android.text.InputType
-import android.text.method.PasswordTransformationMethod
 import android.util.Base64
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -24,13 +23,16 @@ import androidx.core.content.ContextCompat
 import androidx.preference.PreferenceManager
 import com.chaquo.python.Python
 import com.chaquo.python.android.AndroidPlatform
-import com.example.privasee.Constants.TAG
 import com.example.privasee.databinding.ActivityEnterPasswordBinding
 import com.example.privasee.ui.monitor.Constants
+import com.example.privasee.ui.users.addUser.AddUserCapturePhoto
 import com.example.privasee.ui.users.addUser.AddUserCapturePhoto.Companion.REQUEST_CODE_PERMISSION
 import com.example.privasee.ui.users.addUser.CaptureReferenceImage
 import kotlinx.android.synthetic.main.activity_enter_password.*
-import kotlinx.android.synthetic.main.fragment_monitor.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.text.SimpleDateFormat
@@ -41,6 +43,7 @@ class  GetPassword : AppCompatActivity(){
 
     private lateinit var binding: ActivityEnterPasswordBinding
     private var imageCapture: ImageCapture? = null
+    private lateinit var loadingDialog : LoadingDialogFaceMatching
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -48,6 +51,14 @@ class  GetPassword : AppCompatActivity(){
         super.onCreate(savedInstanceState)
         binding = ActivityEnterPasswordBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        val sp = PreferenceManager.getDefaultSharedPreferences(this)
+        if(!(sp.getBoolean("isEnrolled", false))){ //if training data exists already
+
+            val intent = Intent(this@GetPassword, MainActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(intent)
+        }
 
         binding.faceUnlock.isEnabled = false
         if (allPermissionGranted()) {
@@ -61,91 +72,19 @@ class  GetPassword : AppCompatActivity(){
             )
 
         faceUnlock.setOnClickListener {
-                takePhoto()
+            binding.faceUnlock.isEnabled = false
+            loadingDialog = LoadingDialogFaceMatching(this)
+            loadingDialog.startLoadingDialog()
+            takePhoto()
         }
 
     }
 
-    private fun ifFaceExist(string: String){
-
-            //start python
-            if (!Python.isStarted()) Python.start(AndroidPlatform(this))
-            val py = Python.getInstance()
-
-            val outputDirectory = getOutputDirectory()
-            val pathFd = "$outputDirectory/reference face/1.jpg"
-            //val fullpath = File(pathFd)
-            val referenceBitmap = BitmapFactory.decodeFile(pathFd)
-            val referenceString = getStringImage(referenceBitmap)
-
-            //val list = imageReader(fullpath)
-            //val training = list.toTypedArray()
-            //val referenceString = arrayOfNulls<String>(training.size)
-
-            /*for((x, i) in training.withIndex()){
-                val imageFile = i.toString()
-                val bitmap = BitmapFactory.decodeFile(imageFile)
-                val imageString = getStringImage(bitmap)
-                referenceString[x] = imageString
-            }*/
-
-            val bitmap = BitmapFactory.decodeFile(string)
-            val imageString = getStringImage(bitmap)
-
-            val pyobj = py.getModule("recognition") //give name of python file
-            val obj = pyobj.callAttr("android_kotlin",pathFd, imageString) //call main method
-
-            Toast.makeText(this, "$obj", Toast.LENGTH_LONG).show()
-
-
-    }
-
-    private fun noFaceDetectedDialog (){
-
-        val builder = AlertDialog.Builder(this)
-
-        builder.apply {
-            setMessage("Please center your face inside the box.")
-            setTitle("No face detected")
-            setPositiveButton("ok") { _, _ ->
-            }
-        }
-
-        val dialog: AlertDialog = builder.create()
-        dialog.show()
-    }
-
-    private fun startCamera() {
-
-        val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
-
-        cameraProviderFuture.addListener({
-            val cameraProvider: ProcessCameraProvider = cameraProviderFuture.get()
-            val preview = Preview.Builder().build()
-                .also { mPreview ->
-                    mPreview.setSurfaceProvider(
-                        binding.captureFace.surfaceProvider
-                    )
-                }
-
-            imageCapture = ImageCapture.Builder().build()
-            val cameraSelector = CameraSelector.DEFAULT_FRONT_CAMERA
-
-            try {
-                cameraProvider.unbindAll()
-                cameraProvider.bindToLifecycle(
-                    this, cameraSelector, preview, imageCapture
-                )
-            } catch (e:Exception) {
-                Log.d(CaptureReferenceImage.TAG, "startCamera Fail:", e)
-            }
-        }, ContextCompat.getMainExecutor(this))
-    }
     private fun takePhoto() {
         val imageCapture = imageCapture ?: return
 
         val outputDirectory = getOutputDirectory()
-        val pathSnapshot = "$outputDirectory/login key"
+        val pathSnapshot = "$outputDirectory/face unlock"
         val fullpath = File(pathSnapshot)
 
         if (!fullpath.exists()) {
@@ -180,6 +119,113 @@ class  GetPassword : AppCompatActivity(){
                 }
             }
         )
+    }
+    private fun ifFaceExist(string: String){
+
+        val bitmap = BitmapFactory.decodeFile(string)
+        captureFace.visibility = View.INVISIBLE;
+        seeCapturedFace.setImageBitmap(bitmap)
+
+        //start python
+        if (!Python.isStarted()) Python.start(AndroidPlatform(this))
+        val py = Python.getInstance()
+
+        //val imageString = getStringImage(bitmap)
+
+        val pyobj = py.getModule("face_detection") //give name of python file
+        val obj = pyobj.callAttr("main", string, "") //call main method
+        val str = obj.toString()
+
+        if(str == "False"){
+            erroDialog("No face detected", "Please center your face inside the box.")
+        }else{
+
+            CoroutineScope(Dispatchers.IO).launch {
+                val outputDirectory = getOutputDirectory()
+                val pathFd = "$outputDirectory/login key/login_key.jpg"
+
+                if (!Python.isStarted()) Python.start(AndroidPlatform(this@GetPassword))
+                val py = Python.getInstance()
+                val pyobj = py.getModule("recognition") //give name of python file
+                val obj = pyobj.callAttr("android_kotlin", pathFd, string) //call main method
+                val strPass = obj.toString()
+               val longPass = strPass.replace("%", "").toDouble()
+
+              //  seeIfMatched.setText(strPass)
+
+
+                withContext(Dispatchers.Main) {
+                  //  seeIfMatched.text = obj.toString()
+                    loadingDialog.dismissDialog()
+
+                    if(longPass > 95){
+                        val file = File(string)
+                        if (file.exists()) {
+                            file.delete()
+                        }
+
+                        Toast.makeText(this@GetPassword, "Threshold: $longPass", Toast.LENGTH_SHORT).show()
+
+                        val intent = Intent(this@GetPassword, MainActivity::class.java)
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        startActivity(intent)
+                    }else{
+                        erroDialog("Not Matched", "Please try again. Threshold $longPass")
+                      //  Toast.makeText(this@GetPassword, "Face not Matched!", Toast.LENGTH_SHORT).show()
+                        binding.faceUnlock.isEnabled = true
+                    }
+
+                }
+            }
+        }
+
+    }
+
+    private fun erroDialog (title:String, message:String){
+
+        val builder = AlertDialog.Builder(this)
+
+        builder.apply {
+            setMessage(message)
+            setTitle(title)
+            builder.setCancelable(false)
+            setPositiveButton("ok") { _, _ ->
+                if(title == "Not Matched"){
+                    captureFace.visibility = View.VISIBLE
+                    seeCapturedFace.setImageBitmap(null)
+                }
+            }
+        }
+
+        val dialog: AlertDialog = builder.create()
+        dialog.show()
+    }
+
+    private fun startCamera() {
+
+        val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
+
+        cameraProviderFuture.addListener({
+            val cameraProvider: ProcessCameraProvider = cameraProviderFuture.get()
+            val preview = Preview.Builder().build()
+                .also { mPreview ->
+                    mPreview.setSurfaceProvider(
+                        binding.captureFace.surfaceProvider
+                    )
+                }
+
+            imageCapture = ImageCapture.Builder().build()
+            val cameraSelector = CameraSelector.DEFAULT_FRONT_CAMERA
+
+            try {
+                cameraProvider.unbindAll()
+                cameraProvider.bindToLifecycle(
+                    this, cameraSelector, preview, imageCapture
+                )
+            } catch (e:Exception) {
+                Log.d(CaptureReferenceImage.TAG, "startCamera Fail:", e)
+            }
+        }, ContextCompat.getMainExecutor(this))
     }
 
     private fun getOutputDirectory(): File {

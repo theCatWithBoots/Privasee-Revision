@@ -1,6 +1,7 @@
 package com.example.privasee.ui.users.addUser
 
 import android.Manifest
+import android.app.Dialog
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -27,13 +28,19 @@ import com.example.privasee.R
 import com.example.privasee.databinding.ActivityAddUserCapturePhotoBinding
 import com.example.privasee.ui.monitor.Constants
 import kotlinx.android.synthetic.main.activity_add_user_capture_photo.*
+import kotlinx.android.synthetic.main.activity_capture_reference_image.*
+import kotlinx.android.synthetic.main.capture_reference_instructions.*
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
+import java.nio.file.Files
+import java.nio.file.Path
+import java.nio.file.Paths
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
+import java.util.stream.StreamSupport
 
 
 class AddUserCapturePhoto: AppCompatActivity() {
@@ -204,26 +211,54 @@ class AddUserCapturePhoto: AppCompatActivity() {
         val py = Python.getInstance()
 
         //val imageFile = string
-        val bitmap = BitmapFactory.decodeFile(string)
-        val imageString = getStringImage(bitmap)
+        //val bitmap = BitmapFactory.decodeFile(string)
+       // val imageString = getStringImage(bitmap)
+        val path = "empty"
 
         val pyobj = py.getModule("face_detection") //give name of python file
-        val obj = pyobj.callAttr("main", imageString) //call main method
-        val str = obj.toString()
+        val obj = pyobj.callAttr("main", string, path) //call main method
+        val str = obj.toBoolean()
 
 
-        if(str == "No face detected"){
+        if(!str){
             noFaceDetectedDialog()
         }else{
-            val sp = PreferenceManager.getDefaultSharedPreferences(this)
-            val editor = sp.edit()
-            editor.apply(){
-                putBoolean("isThereAFace", true)
-            }.apply()
 
-            for(i in counter..20){
-                takePhoto()
+           // createDirectoryAndSaveFile(string)
+
+            val file = File(string)
+
+            val fullpath = File("$outputDirectory/login key/")
+            if (!fullpath.exists()) {
+                fullpath.mkdirs()
             }
+
+            val newFile = File("$outputDirectory/login key/login_key.jpg")
+
+            if (file.exists()) {
+                val success = file.renameTo(newFile)
+                if (success) {
+                    val sp = PreferenceManager.getDefaultSharedPreferences(this)
+                    val editor = sp.edit()
+
+                    editor.apply(){
+                        putBoolean("isThereAFace", true)
+                    }.apply()
+
+                    for(i in counter..20){
+                        takePhoto()
+                    }
+
+                } else {
+                    errorDialog("Failed to save login key")
+                }
+            } else {
+                errorDialog("File does not exist")
+            }
+
+
+
+
         }
     }
 
@@ -234,31 +269,48 @@ class AddUserCapturePhoto: AppCompatActivity() {
         val py = Python.getInstance()
 
         //val imageFile = string
-        val bitmap = BitmapFactory.decodeFile(string)
-        val imageString = getStringImage(bitmap)
+        //val bitmap = BitmapFactory.decodeFile(string)
+        //val imageString = getStringImage(bitmap)
+        val pathFd = "$outputDirectory/face recognition/"
+        val fullpath = File(pathFd)
+
+        if (!fullpath.exists()) {
+            fullpath.mkdirs()
+        }
+
 
         val pyobj = py.getModule("face_detection") //give name of python file
-        val obj = pyobj.callAttr("main", imageString) //call main method
+        val obj = pyobj.callAttr("main", string, pathFd) //call main method
         val str = obj.toString()
 
-        if(str == "No face detected"){
+       // errorDialog(str)
 
+        //Toast.makeText(this, "$str", Toast.LENGTH_LONG).show()
+
+       if(str == "false"){
             if(dialogCounter == 0){
                 noFaceDetectedDialog ()
                 dialogCounter = 1
             }
+        }
+        else{
+            counter++
+            imageNumber.setText("$counter")
+            if(counter == 20){
+                loadingDialog.dismissDialog()
+                val sp = PreferenceManager.getDefaultSharedPreferences(this)
+                val editor = sp.edit()
 
-        }else{
-            //convert it to byte array
-            val data = Base64.decode(str, Base64.DEFAULT)
-            //now convert it to bitmap
-            val bmp = BitmapFactory.decodeByteArray(data, 0, data.size)
+                editor.apply() {
+                    putBoolean("isEnrolled",true )
+                }.apply()
 
-            createDirectoryAndSaveFile(bmp, string)
+
+                this.finish()
+            }
         }
 
     }
-
     private fun noFaceDetectedDialog (){
         loadingDialog.dismissDialog()
 
@@ -278,13 +330,34 @@ class AddUserCapturePhoto: AppCompatActivity() {
         dialog.show()
     }
 
-    private fun createDirectoryAndSaveFile(bitmap: Bitmap, string: String) {
+    private fun errorDialog (string: String){
+        loadingDialog.dismissDialog()
+
+        val builder = AlertDialog.Builder(this)
+
+        builder.apply {
+            setMessage("$string")
+            setTitle("Error")
+            setPositiveButton("ok") { dialog, which ->
+                /* val intent = intent
+                 finish()
+                 startActivity(intent)*/
+            }
+        }
+
+        val dialog: AlertDialog = builder.create()
+        dialog.show()
+    }
+
+    private fun createDirectoryAndSaveFile(string: String) {
 
         val sp = PreferenceManager.getDefaultSharedPreferences(this)
         val editor = sp.edit()
 
+        val bitmap = BitmapFactory.decodeFile(string)
+
         // var path = getOutputDirectory()
-        val pathFd = "$outputDirectory/face recognition"
+        val pathFd = "$outputDirectory/login key"
         val fullpath = File(pathFd)
 
         val imageStringSplit = string.substring(string.lastIndexOf("/")+1); //split file path, take last(file)
@@ -307,7 +380,8 @@ class AddUserCapturePhoto: AppCompatActivity() {
         try {
             val out = FileOutputStream(file)
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out)
-
+            out.flush()
+            out.close()
           /*  val sp = PreferenceManager.getDefaultSharedPreferences(this)
             val editor = sp.edit()
 
@@ -319,7 +393,6 @@ class AddUserCapturePhoto: AppCompatActivity() {
                 loadingDialog.dismissDialog()
                 this.finish()
             }
-*/
             counter++
 
             if(counter == 20){
@@ -333,16 +406,13 @@ class AddUserCapturePhoto: AppCompatActivity() {
 
 
                 this.finish()
-            }
+            }*/
 
-
-            //   var v = sp.getInt("loadingStopCounter", 0).toString()
-            imageNumber.setText("$counter")
+            /*   var v = sp.getInt("loadingStopCounter", 0).toString()
+           // imageNumber.setText("$counter")
 
             //  Toast.makeText(this, "$v", Toast.LENGTH_SHORT).show()
-            //faceRecognition(string)
-            out.flush()
-            out.close()
+            //faceRecognition(string)*/
 
         } catch (e: java.lang.Exception) {
             e.printStackTrace()

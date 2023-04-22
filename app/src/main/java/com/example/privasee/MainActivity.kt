@@ -55,6 +55,8 @@ class MainActivity : AppCompatActivity() {
         })
 
         val sp = PreferenceManager.getDefaultSharedPreferences(this)
+
+
         val editor = sp.edit()
         editor.apply(){
             putString("BACK", "")
