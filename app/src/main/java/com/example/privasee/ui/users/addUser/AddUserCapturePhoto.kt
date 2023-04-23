@@ -6,11 +6,14 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Base64
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -30,6 +33,8 @@ import com.example.privasee.ui.monitor.Constants
 import kotlinx.android.synthetic.main.activity_add_user_capture_photo.*
 import kotlinx.android.synthetic.main.activity_capture_reference_image.*
 import kotlinx.android.synthetic.main.capture_reference_instructions.*
+import kotlinx.android.synthetic.main.custom_dialog.*
+import kotlinx.android.synthetic.main.custom_dialog.view.*
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
@@ -49,8 +54,10 @@ class AddUserCapturePhoto: AppCompatActivity() {
     private var imageCapture: ImageCapture? = null
     private lateinit var outputDirectory: File
     private lateinit var cameraExecutor: ExecutorService
-    private lateinit var loadingDialog : LoadingDialog
+   // private lateinit var loadingDialog : LoadingDialog
     var counter = 1
+    private lateinit var dialogBinding: View
+    private lateinit var loadingDialog: Dialog
     var dialogCounter = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -90,9 +97,17 @@ class AddUserCapturePhoto: AppCompatActivity() {
             }
 
             dialogCounter = 0
+            dialogBinding = layoutInflater.inflate(R.layout.custom_dialog, null)
+            loadingDialog = Dialog(this)
+            loadingDialog.setContentView(dialogBinding)
 
-            loadingDialog = LoadingDialog(this)
-            loadingDialog.startLoadingDialog()
+            loadingDialog.setCancelable(false)
+            loadingDialog.textView3.text = "Creating Training Data. Please Wait..."
+            loadingDialog.progress_bar.progress = counter*5
+            val progCounter = counter * 5
+            loadingDialog.text_view_progress.text = "$progCounter%"
+            loadingDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            loadingDialog.show()
 
          //   val sp = PreferenceManager.getDefaultSharedPreferences(this)
             val editor = sp.edit()
@@ -241,6 +256,10 @@ class AddUserCapturePhoto: AppCompatActivity() {
                     val sp = PreferenceManager.getDefaultSharedPreferences(this)
                     val editor = sp.edit()
 
+                    editor.apply() {
+                        putString("ownerPic",newFile.toString() )
+                    }.apply()
+
                     editor.apply(){
                         putBoolean("isThereAFace", true)
                     }.apply()
@@ -281,13 +300,13 @@ class AddUserCapturePhoto: AppCompatActivity() {
 
         val pyobj = py.getModule("face_detection") //give name of python file
         val obj = pyobj.callAttr("main", string, pathFd) //call main method
-        val str = obj.toString()
+        val str = obj.toBoolean()
 
        // errorDialog(str)
 
         //Toast.makeText(this, "$str", Toast.LENGTH_LONG).show()
 
-       if(str == "false"){
+       if(!str){
             if(dialogCounter == 0){
                 noFaceDetectedDialog ()
                 dialogCounter = 1
@@ -296,8 +315,13 @@ class AddUserCapturePhoto: AppCompatActivity() {
         else{
             counter++
             imageNumber.setText("$counter")
+
+           val progCounter = counter * 5
+           loadingDialog.progress_bar.progress = progCounter
+           loadingDialog.text_view_progress.text = "$progCounter%"
+
             if(counter == 20){
-                loadingDialog.dismissDialog()
+                loadingDialog.dismiss()
                 val sp = PreferenceManager.getDefaultSharedPreferences(this)
                 val editor = sp.edit()
 
@@ -312,7 +336,7 @@ class AddUserCapturePhoto: AppCompatActivity() {
 
     }
     private fun noFaceDetectedDialog (){
-        loadingDialog.dismissDialog()
+        loadingDialog.dismiss()
 
         val builder = AlertDialog.Builder(this)
 
@@ -331,7 +355,7 @@ class AddUserCapturePhoto: AppCompatActivity() {
     }
 
     private fun errorDialog (string: String){
-        loadingDialog.dismissDialog()
+        loadingDialog.dismiss()
 
         val builder = AlertDialog.Builder(this)
 

@@ -20,7 +20,7 @@ class AppLockTimer :  LifecycleService() {
         val sp = PreferenceManager.getDefaultSharedPreferences(this@AppLockTimer)
         val editor = sp.edit()
 
-        if(!(sp.getBoolean("IS_TIMER_RUNNING", false))) {
+        if(!(sp.getBoolean("IS_TIMER_RUNNING", false))) {//if timer is not running
 
             editor.apply() {
                 putBoolean("IS_TIMER_RUNNING", true)
@@ -45,7 +45,7 @@ class AppLockTimer :  LifecycleService() {
                 val sp = PreferenceManager.getDefaultSharedPreferences(this@AppLockTimer)
                 val editor = sp.edit()
 
-                if(sp.getBoolean("IS_APPLOCK_TIMER_RUNNING", false)){
+                if(sp.getBoolean("IS_TIMER_RUNNING", false) ){
                     intent.putExtra("countdown",millisUntilFinished)
                     sendBroadcastMessage(intent)
                 }else{
@@ -70,7 +70,7 @@ class AppLockTimer :  LifecycleService() {
 
                 // To make the screen time limit accessible
                 editor.apply() {
-                    putBoolean("IS_APPLOCK_TIMER_RUNNING", false)
+                   putBoolean("IS_APPLOCK_TIMER_RUNNING", false)
                 }.apply()
 
                 // Remove lock from controlled app lists

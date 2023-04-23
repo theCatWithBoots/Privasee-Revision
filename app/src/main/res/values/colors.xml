@@ -12,4 +12,8 @@
     <color name="privaseePalette2">#8b8887</color>
     <color name="privaseePalette3">#bb653c</color>
     <color name="privaseePalette4">#a17d5d</color>
+    <color name="circleStart">#00c3ff</color>
+    <color name="circleEnd">#e4ecbf</color>
+
+
 </resources>

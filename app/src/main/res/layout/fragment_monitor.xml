@@ -11,85 +11,45 @@
         android:id="@+id/textView12"
         android:layout_width="330dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="56dp"
         android:fontFamily="@font/roboto_slab"
         android:gravity="center"
         android:text="Make sure to enable the camera permission to record any suspicious activities"
         android:textSize="15sp"
-        app:layout_constraintEnd_toEndOf="@+id/setSnapshotThreshold"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="@+id/setSnapshotThreshold"
-        app:layout_constraintTop_toBottomOf="@+id/setSnapshotThreshold" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.493"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.308" />
 
     <Button
         android:id="@+id/btnEnableCamera"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
         android:fontFamily="@font/roboto_slab"
         android:gravity="center"
         android:text="Enable Camera Permission"
         android:textSize="14sp"
-        app:layout_constraintEnd_toEndOf="@+id/textView12"
-        app:layout_constraintStart_toStartOf="@+id/textView12"
-        app:layout_constraintTop_toBottomOf="@+id/textView12" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.411" />
 
     <Button
         android:id="@+id/btnAccessRecords"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="60dp"
         android:fontFamily="@font/roboto_slab"
         android:gravity="center"
         android:text="Show All Monitoring Records"
         android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <EditText
-        android:id="@+id/editThreshold"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:ems="10"
-        android:hint="Threshold Value"
-        android:inputType="textPersonName"
-        android:minHeight="48dp"
-        android:text=""
-        app:layout_constraintEnd_toEndOf="@+id/textView11"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="@+id/textView11"
-        app:layout_constraintTop_toBottomOf="@+id/textView11"
-        tools:ignore="SpeakableTextPresentCheck" />
-
-    <Button
-        android:id="@+id/setSnapshotThreshold"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:fontFamily="@font/roboto_slab"
-        android:gravity="center"
-        android:text="Set Threshold"
-        android:textSize="14sp"
-        app:layout_constraintEnd_toEndOf="@+id/editThreshold"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="@+id/editThreshold"
-        app:layout_constraintTop_toBottomOf="@+id/editThreshold" />
-
-    <TextView
-        android:id="@+id/textView11"
-        android:layout_width="330dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="60dp"
-        android:fontFamily="@font/roboto_slab"
-        android:gravity="center"
-        android:text="Threshold level determines how strict the face verification. The lower, the stricter it is.\nThe optimal level is in the range 8000 - 10000"
-        android:textSize="15sp"
-        app:layout_constraintEnd_toEndOf="@+id/btnAccessRecords"
-        app:layout_constraintStart_toStartOf="@+id/btnAccessRecords"
-        app:layout_constraintTop_toBottomOf="@+id/btnAccessRecords" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.594" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

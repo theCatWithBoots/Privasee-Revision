@@ -31,6 +31,7 @@ import com.example.privasee.utils.CheckPermissionUtils
 import kotlinx.android.synthetic.main.fragment_control_access_applock.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.json.JSONArray
 import java.util.*
 
 
@@ -136,6 +137,13 @@ class ControlAccessFragmentScreenAppLock : Fragment() {
                                                 val sp = PreferenceManager.getDefaultSharedPreferences(requireContext())
                                                 val editor = sp.edit()
 
+                                                val jsonArray = JSONArray(controlledAppPackageNames.toList())
+                                                val jsonString = jsonArray.toString()
+
+                                                editor.apply(){
+                                                    putString("CurrentControlledApps", jsonString)
+                                                }.apply()
+
                                                 editor.apply() {
                                                     putBoolean("IS_APPLOCK_TIMER_RUNNING", true)
                                                 }.apply()
@@ -185,6 +193,10 @@ class ControlAccessFragmentScreenAppLock : Fragment() {
 
                                             editor.apply() {
                                                 putBoolean("IS_APPLOCK_TIMER_RUNNING", false)
+                                            }.apply()
+
+                                            editor.apply() {
+                                                putBoolean("IS_TIMER_RUNNING", false)
                                             }.apply()
 
                                             activity!!.stopService(
@@ -305,6 +317,15 @@ class ControlAccessFragmentScreenAppLock : Fragment() {
         if (intent.extras != null) {
 
             val millisUntilFinished = intent.getLongExtra("countdown", 30000)
+
+            val sp = PreferenceManager.getDefaultSharedPreferences(requireContext())
+            val editor = sp.edit()
+
+            editor.apply() {
+                putLong("timerLeftForAppBlock",millisUntilFinished/60000 )
+            }.apply()
+
+
             var seconds = (millisUntilFinished/1000)
             var minutes = (seconds/60)
             val hours = (minutes/60)

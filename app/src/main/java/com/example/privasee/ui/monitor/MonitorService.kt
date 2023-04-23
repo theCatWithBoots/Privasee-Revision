@@ -118,14 +118,14 @@ class MonitorService :  LifecycleService() {
         val py = Python.getInstance()
 
         //val imageFile = string
-        val bitmap = BitmapFactory.decodeFile(string)
-        val imageString = getStringImage(bitmap)
+       // val bitmap = BitmapFactory.decodeFile(string)
+        //val imageString = getStringImage(bitmap)
 
         val pyobj = py.getModule("face_detection") //give name of python file
-        val obj = pyobj.callAttr("main", imageString) //call main method
-        val str = obj.toString()
+        val obj = pyobj.callAttr("main", string, "") //call main method
+        val str = obj.toBoolean()
 
-        if(str == "No face detected"){
+        if(!str){
 
            // val imageStringSplit = string.substring(string.lastIndexOf("/")+1); //split file path, take last(file)
            // Toast.makeText(this, "No face detected", Toast.LENGTH_LONG).show()
@@ -142,17 +142,17 @@ class MonitorService :  LifecycleService() {
 
         }else{
             //convert it to byte array
-            val data = Base64.decode(str, Base64.DEFAULT)
+            //val data = Base64.decode(str, Base64.DEFAULT)
             //now convert it to bitmap
-            val bmp = BitmapFactory.decodeByteArray(data, 0, data.size)
+          //  val bmp = BitmapFactory.decodeByteArray(data, 0, data.size)
 
            // createDirectoryAndSaveFile(bmp, string)
-            faceRecognition(bmp, string)
+            faceRecognition(string)
         }
 
     }
 
-    private fun faceRecognition(bitmap: Bitmap, stringImage: String){
+    private fun faceRecognition(string: String){
 
         val sp = PreferenceManager.getDefaultSharedPreferences(this)
 
@@ -160,51 +160,18 @@ class MonitorService :  LifecycleService() {
         if (!Python.isStarted()) Python.start(AndroidPlatform(this))
         val py = Python.getInstance()
 
-        filelist = mutableListOf()
+        val outputDirectory = getOutputDirectory()
+        val pathFd = "$outputDirectory/login key/login_key.jpg"
 
-        val pathFd = "$outputDirectory/face recognition"
-        val fullpath = File(pathFd)
+        val pyobj = py.getModule("recognition") //give name of python file
+        val obj = pyobj.callAttr("android_kotlin", pathFd, string) //call main method
+        val strPass = obj.toString()
+        val longPass = strPass.replace("%", "").toDouble()
 
-        if(!fullpath.exists()){
-            fullpath.mkdirs()
-        }
-
-        val list = imageReader(fullpath)
-        val training = list.toTypedArray()
-        val trainingString = arrayOfNulls<String>(training.size)
-
-        for((x, i) in training.withIndex()){
-            val imageFile = i.toString()
-            val bitmap = BitmapFactory.decodeFile(imageFile)
-            val imageString = getStringImage(bitmap)
-            trainingString[x] = imageString
-        }
-
-        val pyobj = py.getModule("face_recognition") //give name of python file
-        val obj = pyobj.callAttr("train", *trainingString ) //call main method
-
-        val pyobj2 = py.getModule("get_pcca") //give name of python file
-        val obj2 = pyobj2.callAttr("train", *trainingString) //call main method
-
-        //val bitmapp = BitmapFactory.decodeFile(string)
-        var imageStringg = getStringImage(bitmap)
-
-        val threshold = sp.getInt("threshold", 8000)
-
-        val objFinal = pyobj.callAttr(
-            "project_testing",
-            imageStringg,
-            obj,
-            obj2,
-            threshold
-        ) //call main method project_testing
-
-      //  Toast.makeText(this, "$objFinal", Toast.LENGTH_LONG).show()
-
-       if(!objFinal.toBoolean()){
+       if(longPass < 95){
 
            val intent = Intent(this, DbQueryIntentService::class.java)
-           intent.putExtra("image", stringImage)
+           intent.putExtra("image", string)
            intent.putExtra("query", "insertRecord")
            intent.putExtra("appName", appname)
           // intent.putExtra("status", objFinal.toString())
@@ -213,20 +180,22 @@ class MonitorService :  LifecycleService() {
            isSnapshotDone = true
            this.stopSelf()
 
-           val editor = sp.edit()
+          /*val editor = sp.edit()
            editor.apply(){
                putBoolean("result", objFinal.toBoolean())
-           }.apply()
+           }.apply()*/
+
        }else{
-           var file = File(stringImage)
+           var file = File(string)
            file.delete()
 
            isSnapshotDone = true
            this.stopSelf()
-           val editor = sp.edit()
+
+           /*val editor = sp.edit()
            editor.apply(){
                putBoolean("result", objFinal.toBoolean())
-           }.apply()
+           }.apply()*/
        }
 
         // isSnapshotDone = true

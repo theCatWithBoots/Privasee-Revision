@@ -134,10 +134,16 @@ class  GetPassword : AppCompatActivity(){
 
         val pyobj = py.getModule("face_detection") //give name of python file
         val obj = pyobj.callAttr("main", string, "") //call main method
-        val str = obj.toString()
+        val str = obj.toBoolean()
 
-        if(str == "False"){
-            erroDialog("No face detected", "Please center your face inside the box.")
+        if(!str){
+
+            val file = File(string)
+            if (file.exists()) {
+                file.delete()
+            }
+
+            errorDialog("No face detected", "Please center your face inside the box.")
         }else{
 
             CoroutineScope(Dispatchers.IO).launch {
@@ -153,7 +159,6 @@ class  GetPassword : AppCompatActivity(){
 
               //  seeIfMatched.setText(strPass)
 
-
                 withContext(Dispatchers.Main) {
                   //  seeIfMatched.text = obj.toString()
                     loadingDialog.dismissDialog()
@@ -164,13 +169,13 @@ class  GetPassword : AppCompatActivity(){
                             file.delete()
                         }
 
-                        Toast.makeText(this@GetPassword, "Threshold: $longPass", Toast.LENGTH_SHORT).show()
+                    //    Toast.makeText(this@GetPassword, "Threshold: $longPass", Toast.LENGTH_SHORT).show()
 
                         val intent = Intent(this@GetPassword, MainActivity::class.java)
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                         startActivity(intent)
                     }else{
-                        erroDialog("Not Matched", "Please try again. Threshold $longPass")
+                        errorDialog("Not Matched", "Please try again.")
                       //  Toast.makeText(this@GetPassword, "Face not Matched!", Toast.LENGTH_SHORT).show()
                         binding.faceUnlock.isEnabled = true
                     }
@@ -181,7 +186,8 @@ class  GetPassword : AppCompatActivity(){
 
     }
 
-    private fun erroDialog (title:String, message:String){
+    private fun errorDialog (title:String, message:String){
+        loadingDialog.dismissDialog()
 
         val builder = AlertDialog.Builder(this)
 
@@ -190,10 +196,9 @@ class  GetPassword : AppCompatActivity(){
             setTitle(title)
             builder.setCancelable(false)
             setPositiveButton("ok") { _, _ ->
-                if(title == "Not Matched"){
                     captureFace.visibility = View.VISIBLE
                     seeCapturedFace.setImageBitmap(null)
-                }
+                    binding.faceUnlock.isEnabled = true
             }
         }
 

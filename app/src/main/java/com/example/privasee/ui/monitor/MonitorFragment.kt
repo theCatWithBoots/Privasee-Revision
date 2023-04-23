@@ -74,32 +74,6 @@ class MonitorFragment : Fragment() {
             checkForPermissions(android.Manifest.permission.CAMERA, "Camera", Constants.REQUEST_CODE_PERMISSIONS)
         }
 
-        val sp = PreferenceManager.getDefaultSharedPreferences(requireContext())
-        editThreshold.inputType = InputType.TYPE_CLASS_NUMBER
-        editThreshold.setText(sp.getInt("threshold", 8000).toString())
-
-       setSnapshotThreshold.setOnClickListener {
-
-           val threshold = editThreshold.text.toString()
-
-           val editor = sp.edit()
-
-           if(threshold.isNotEmpty()){
-
-               editor.apply(){
-                   putInt("threshold", threshold.toInt())
-               }.apply()
-                val thresholdText = "Current Threshold is $threshold"
-               Toast.makeText(requireContext(), "$thresholdText", Toast.LENGTH_SHORT).show()
-        //       setThreshold.text = thresholdText
-
-           }else{
-               val thresholdText = "Please Input Threshold"
-            //   setThreshold.text = thresholdText
-               Toast.makeText(requireContext(), "$thresholdText", Toast.LENGTH_SHORT).show()
-           }
-       }
-
     }
     private fun checkForPermissions(permission: String, name: String, requestCode: Int){ //if not granted, it asks for permission
         when {
