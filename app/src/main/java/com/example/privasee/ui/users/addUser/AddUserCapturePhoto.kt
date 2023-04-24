@@ -316,19 +316,50 @@ class AddUserCapturePhoto: AppCompatActivity() {
             counter++
             imageNumber.setText("$counter")
 
-           val progCounter = counter * 5
-           loadingDialog.progress_bar.progress = progCounter
-           loadingDialog.text_view_progress.text = "$progCounter%"
+           val progCounter = counter * 4
+
+           if(progCounter == 76){
+               loadingDialog.textView3.text = "Computing Threshold. Please Wait..."
+               loadingDialog.progress_bar.progress = 90
+               loadingDialog.text_view_progress.text = "90%"
+
+           }else{
+               loadingDialog.progress_bar.progress = progCounter
+               loadingDialog.text_view_progress.text = "$progCounter%"
+           }
 
             if(counter == 20){
-                loadingDialog.dismiss()
+
+
                 val sp = PreferenceManager.getDefaultSharedPreferences(this)
                 val editor = sp.edit()
+
+                val referencePath = "$outputDirectory/login key/login_key.jpg"
+                val pyobj = py.getModule("compute_threshold") //give name of python file
+                val obj = pyobj.callAttr("compute", referencePath, pathFd) //call main method
+
+                if(obj.toInt() < 6000){
+                    editor.apply() {
+                        putInt("Threshold",6000)
+                    }.apply()
+
+                }else if(obj.toInt() < 8000){
+                    editor.apply() {
+                        putInt("Threshold",8000 )
+                    }.apply()
+                }else{
+                    editor.apply() {
+                        putInt("Threshold",10000 )
+                    }.apply()
+                }
 
                 editor.apply() {
                     putBoolean("isEnrolled",true )
                 }.apply()
 
+                loadingDialog.textView3.text = "Almost done. Please Wait..."
+                loadingDialog.progress_bar.progress = 99
+                loadingDialog.text_view_progress.text = "99%"
 
                 this.finish()
             }

@@ -34,6 +34,10 @@ class MonitorFragment : Fragment() {
     ): View? {
         _binding = FragmentMonitorBinding.inflate(inflater, container, false)
 
+        val sp = PreferenceManager.getDefaultSharedPreferences(requireContext())
+        val opThreshold = sp.getInt("Threshold", 0)
+        binding.optimalThreshold.setText("Optimal threshold is : $opThreshold")
+
         val callback = object : OnBackPressedCallback(true){
             override fun handleOnBackPressed() {
                val eBuilder = AlertDialog.Builder(requireContext())
